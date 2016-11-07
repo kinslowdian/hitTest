@@ -16,11 +16,28 @@ function pageLoad_init()
 function game_setup()
 {
 	players.player 	= {};
-	players.enemy 	= {};
+	players.enemy 	= new Array();
 
 	// RADIUS HALF WIDTH 80 / 40
-	players.player 	= {radius: 40, x: 0, y: 0};
-	players.enemy	= {radius: 40, x: 320, y: 320, class: "enemy0", link: document.querySelector('.enemy0')};
+	players.player 	= {radius: 40, x: 0, y: 0, link: document.querySelector(".player")};
+
+	enemy_create({radius:40, x:320, y:320, num:0});
+	enemy_create({radius:40, x:0, y:320, num:1});
+	enemy_create({radius:40, x:120, y:640, num:2});
+	enemy_create({radius:40, x:640, y:640, num:3});
+}
+
+function enemy_create(settings)
+{
+	var e = {};
+
+	e.radius 	= settings.radius;
+	e.x			= settings.x;
+	e.y			= settings.y;
+	e.class		= 'enemy' + settings.num;
+	e.link		= document.querySelector('.' + e.class);
+
+	players.enemy.push(e);
 }
 
 function onEnterFrame_setup()
@@ -63,36 +80,44 @@ function onEnterFrame_event()
 	}
 }
 
+function player_move(settings)
+{
+	players.player.x = settings.x;
+	players.player.y = settings.y;
+	players.player.link.style.transform = 'translate(' + settings.x + 'px, ' + settings.y + 'px)';
+}
+
 function enemy_move(settings)
 {
-	players.enemy.x = settings.x;
-	players.enemy.y = settings.y;
-	players.enemy.link.style.transform = 'translate(' + settings.x + 'px, ' + settings.y + 'px)';
+	players.enemy[settings.select].x = settings.x;
+	players.enemy[settings.select].y = settings.y;
+	players.enemy[settings.select].link.style.transform = 'translate(' + settings.x + 'px, ' + settings.y + 'px)';
 }
 
 function hit_check()
 {
-	var dx = 0;
-	var dy = 0;
+	var _player = players.player
 
-	dx = (players.player.x + players.player.radius) - (players.enemy.x + players.enemy.radius);
-	dy = (players.player.y + players.player.radius) - (players.enemy.y + players.enemy.radius);
-	dc = players.enemy.class;
-	
-	distance = Math.sqrt(dx * dx + dy * dy);
-
-	if(distance < players.player.radius + players.enemy.radius)
+	for(var i = 0; i < players.enemy.length; i++)
 	{
-		trace("ATTACK " + distance + " " + dc);
+		var dx 		= 0;
+		var dy 		= 0;
+		var _enemy 	= players.enemy[i];
 
-		onEnterFrame.run = false;
+		dx = (_player.x + _player.radius) - (_enemy.x + _enemy.radius);
+		dy = (_player.y + _player.radius) - (_enemy.y + _enemy.radius);
+		dc = _enemy.class;
+		
+		distance = Math.sqrt(dx * dx + dy * dy);
 
-		players.enemy.link.style.opacity = "0.5";
-	}
+		if(distance < _player.radius + _enemy.radius)
+		{
+			trace("ATTACK " + distance + " " + dc);
 
-	else
-	{
-		trace("APART " + distance);
+			onEnterFrame.run = false;
+
+			_enemy.link.style.opacity = "0.5";
+		}
 	}
 }
 

@@ -24,11 +24,6 @@ html, body
 	background: #813B7C;
 }
 
-.enemy0
-{
-	transform: translate(320px, 320px);
-}
-
 .player
 {
 	width: 80px;
@@ -36,4 +31,25 @@ html, body
 	border-radius: 50%;
 	position: absolute;
 	background: #59D044;
+}
+
+
+.enemy0
+{
+	transform: translate(320px, 320px);
+}
+
+.enemy1
+{
+	transform: translate(0px, 320px);
+}
+
+.enemy2
+{
+	transform: translate(120px, 640px);
+}
+
+.enemy3
+{
+	transform: translate(640px, 640px);
 }
