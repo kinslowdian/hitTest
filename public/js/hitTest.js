@@ -2,19 +2,139 @@
 var trace = function(msg){ console.log(msg); };
 
 var onEnterFrame;
-var players = {};
+var players;
+var control;
 
 function pageLoad_init()
 {
 	trace("pageLoad_init();");
 
+	control_setup();
 	game_setup();
 
 	onEnterFrame_setup();
 }
 
+function control_setup()
+{
+	control = {};
+	control.direction = "S";
+	// BAISC
+	control.x = 0;
+	control.y = 0;
+	// VELOCITY
+	control.vx = 0;
+	control.vy = 0;	
+	// TARGET
+	control.tx = 0;
+	control.ty = 0;
+	// OUTPUT
+	control.dx = 0;
+	control.dy = 0;
+	control.easing = 0.2;
+	control.inc = 10;
+}
+
+function control_port(connect)
+{
+	if(connect)
+	{
+		window.addEventListener("keydown", control_event, false);
+	}
+
+	else
+	{
+		window.removeEventListener("keydown", control_event, false);
+	}	
+}
+
+function control_event(event)
+{
+	var direction = event.keycode || event.keyCode;
+
+	switch(direction)
+	{
+		case 37:
+		{
+			//LEFT
+			control.direction = "L";
+
+			break;
+		}
+
+		case 38:
+		{
+			// UP
+			control.direction = "U";
+
+			break;
+		}
+
+		case 39:
+		{
+			// RIGHT
+			control.direction = "R";
+
+			break;
+		}
+
+		case 40:
+		{
+			// DOWN
+			control.direction = "D";
+
+			break;
+		}
+
+		default:
+		{
+			control.direction = "S";
+		}
+	}
+
+	if(control.direction !== "S")
+	{
+		control_move();
+	}
+
+	trace(direction);
+}
+
+function control_move()
+{
+	if(control.direction === "L")
+	{
+		control.tx -= control.inc;
+	}
+
+	else if(control.direction === "R")
+	{
+		control.tx += control.inc;
+	}
+
+	else if(control.direction === "U")
+	{
+		control.ty -= control.inc;
+	}
+
+	else if(control.direction === "D")
+	{
+		control.ty += control.inc;
+	}
+
+	// ERROR
+	else
+	{
+		control.direction = "S";
+	}
+
+	// player_move();
+}
+
 function game_setup()
 {
+	players = {};
+
 	players.player 	= {};
 	players.enemy 	= new Array();
 
@@ -25,6 +145,8 @@ function game_setup()
 	enemy_create({radius:40, x:0, y:320, num:1});
 	enemy_create({radius:40, x:120, y:640, num:2});
 	enemy_create({radius:40, x:640, y:640, num:3});
+
+	control_port(true);
 }
 
 function enemy_create(settings)
@@ -47,6 +169,7 @@ function onEnterFrame_setup()
 	onEnterFrame.calls = new Array();
 
 	onEnterFrame.calls.push(hit_check);
+	onEnterFrame.calls.push(player_move);
 
 	onEnterFrame_init(true);
 }
@@ -80,11 +203,44 @@ function onEnterFrame_event()
 	}
 }
 
-function player_move(settings)
+function player_move()
 {
-	players.player.x = settings.x;
-	players.player.y = settings.y;
-	players.player.link.style.transform = 'translate(' + settings.x + 'px, ' + settings.y + 'px)';
+	// X
+
+	control.dx = control.tx - control.x;
+	
+
+	if(Math.abs(control.dx) < 1)
+	{
+		control.x = control.tx;
+	}
+
+	else
+	{
+		control.vx = control.dx * control.easing;
+		control.x += control.vx;
+	}
+
+	// Y
+
+	control.dy = control.ty - control.y;
+	
+
+	if(Math.abs(control.dy) < 1)
+	{
+		control.y = control.ty;
+	}
+
+	else
+	{
+		control.vy = control.dy * control.easing;
+		control.y += control.vy;
+	}
+
+
+	players.player.x = control.x;
+	players.player.y = control.y;
+	players.player.link.style.transform = 'translate(' + players.player.x + 'px, ' + players.player.y + 'px)';
 }
 
 function enemy_move(settings)
