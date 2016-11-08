@@ -19,19 +19,29 @@ function control_setup()
 {
 	control = {};
 	control.direction = "S";
+	
 	// BAISC
 	control.x = 0;
 	control.y = 0;
+	
 	// VELOCITY
-	control.vx = 0;
-	control.vy = 0;	
+	control.vx = control.x;
+	control.vy = control.y;	
+	
 	// TARGET
-	control.tx = 0;
-	control.ty = 0;
+	control.tx = control.x;
+	control.ty = control.y;
+	
 	// OUTPUT
-	control.dx = 0;
-	control.dy = 0;
-	control.easing = 0.2;
+	control.dx = control.x;
+	control.dy = control.y;
+	
+	// SAFE
+	control.sx = control.x;
+	control.sy = control.y;
+
+	// SETTINGS
+	control.easing = 0.05;
 	control.inc = 10;
 }
 
@@ -254,6 +264,7 @@ function hit_check()
 {
 	var _player = players.player
 
+	// ENEMY
 	for(var i = 0; i < players.enemy.length; i++)
 	{
 		var dx 		= 0;
