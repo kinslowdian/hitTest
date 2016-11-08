@@ -33,6 +33,12 @@ html, body
 	background: #59D044;
 }
 
+.wall
+{
+	position: absolute;
+	background: #00225D;
+}
+
 
 .enemy0
 {
@@ -52,4 +58,12 @@ html, body
 .enemy3
 {
 	transform: translate(640px, 640px);
+}
+
+.wall0
+{
+	width: 600px;
+	height: 1000px;
+
+	transform: translate(900px, 80px);
 }

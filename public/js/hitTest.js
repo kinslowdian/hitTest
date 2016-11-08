@@ -147,6 +147,7 @@ function game_setup()
 
 	players.player 	= {};
 	players.enemy 	= new Array();
+	players.wall 	= new Array();
 
 	// RADIUS HALF WIDTH 80 / 40
 	players.player 	= {radius: 40, x: 0, y: 0, link: document.querySelector(".player")};
@@ -155,6 +156,8 @@ function game_setup()
 	enemy_create({radius:40, x:0, y:320, num:1});
 	enemy_create({radius:40, x:120, y:640, num:2});
 	enemy_create({radius:40, x:640, y:640, num:3});
+
+	wall_create({w:600, h:1000, x:900, y:80, num:0});
 
 	control_port(true);
 }
@@ -170,6 +173,18 @@ function enemy_create(settings)
 	e.link		= document.querySelector('.' + e.class);
 
 	players.enemy.push(e);
+}
+
+function wall_create(settings)
+{
+	var w = {};
+
+	w.w 		= settings.w;
+	w.h 		= settings.h;
+	w.class 	= 'wall' + settings.num;
+	w.link		= document.querySelector('.' + w.class);
+
+	players.wall.push(w);
 }
 
 function onEnterFrame_setup()
@@ -285,6 +300,12 @@ function hit_check()
 
 			_enemy.link.style.opacity = "0.5";
 		}
+	}
+
+	// WALL
+	for(var j = 0; j < players.wall.length; j++)
+	{
+		// TODO
 	}
 }
 
