@@ -282,19 +282,21 @@ function hit_check()
 	// ENEMY
 	for(var i = 0; i < players.enemy.length; i++)
 	{
-		var dx 		= 0;
-		var dy 		= 0;
-		var _enemy 	= players.enemy[i];
+		var e_dx 		= 0;
+		var e_dy 		= 0;
+		var e_dc 		= "";
+		var _enemy 		= players.enemy[i];
+		var e_distance 	= 0;
 
-		dx = (_player.x + _player.radius) - (_enemy.x + _enemy.radius);
-		dy = (_player.y + _player.radius) - (_enemy.y + _enemy.radius);
-		dc = _enemy.class;
+		e_dx = (_player.x + _player.radius) - (_enemy.x + _enemy.radius);
+		e_dy = (_player.y + _player.radius) - (_enemy.y + _enemy.radius);
+		e_dc = _enemy.class;
 		
-		distance = Math.sqrt(dx * dx + dy * dy);
+		e_distance = Math.sqrt(e_dx * e_dx + e_dy * e_dy);
 
-		if(distance < _player.radius + _enemy.radius)
+		if(e_distance < _player.radius + _enemy.radius)
 		{
-			trace("ATTACK " + distance + " " + dc);
+			trace("ATTACK " + e_distance + " " + e_dc);
 
 			onEnterFrame.run = false;
 
@@ -305,7 +307,28 @@ function hit_check()
 	// WALL
 	for(var j = 0; j < players.wall.length; j++)
 	{
-		// TODO
+		var w_dx		= 0;
+		var w_dy		= 0;
+		var w_dc 		= "";
+		var _wall		= players.wall[j];
+		var w_distance 	= 0;
+
+		w_dx = (_player.x + _player.radius) - (_wall.x + _wall.w);
+		w_dy = (_player.y + _player.radius) - (_wall.y + _wall.h);
+		w_dc = _wall.class;
+
+		w_distance = Math.sqrt(w_dx * w_dx + w_dy * w_dy);
+
+		if(w_distance < _player.radius + _wall.w && w_distance < _player.radius + _wall.h)
+		{
+			trace("ATTACK " + w_distance + " " + w_dc);
+
+			// onEnterFrame.run = false;
+
+			_wall.link.style.opacity = "0.5";
+		}
+		
+
 	}
 }
 
